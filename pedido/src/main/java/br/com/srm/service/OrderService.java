@@ -28,6 +28,7 @@ public class OrderService {
 
     public Order create(Order order) {
         logger.info("m=create, order={}", order);
+        validateItensExists(order);
         order.setCreateDate(new Date());
         order.setStatus(Order.Status.CREATED);
         return orderRepository.save(order);
@@ -44,7 +45,7 @@ public class OrderService {
     public Order finish(String id) {
         logger.info("m=finish, id={}", id);
         Order order = getOrderById(id);
-        validateItens(order);
+        validateItensAmount(order);
         order.setFinishDate(new Date());
         order.setStatus(Order.Status.FINISHED);
         updateProductAmount(order);
@@ -59,17 +60,25 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    private void validateItens(Order order) {
+    private void validateItensAmount(Order order) {
         for (OrderItem item : order.getItens()) {
-            Product product = estoqueClient.findByBarCode(item.getProduct());
+            Product product = estoqueClient.findByIsbn(1l, item.getProduct());
             if (product.getAmount() < item.getAmount())
                 throw new BusinessServiceException("Quantidade de produto insuficiente no estoque");
         }
     }
 
+    private void validateItensExists(Order order) {
+        for (OrderItem item : order.getItens()) {
+            Product product = estoqueClient.findByIsbn(1l, item.getProduct());
+            if (product == null)
+                throw new BusinessServiceException("Produto nao encontrado");
+        }
+    }
+
     private void updateProductAmount(Order order) {
         for (OrderItem item : order.getItens()) {
-            estoqueClient.subtractAmount(item.getProduct(), item.getAmount());
+            estoqueClient.subtractAmount(1l, item.getProduct(), item.getAmount());
         }
     }
 
