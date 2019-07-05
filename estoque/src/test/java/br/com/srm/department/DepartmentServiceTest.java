@@ -1,4 +1,4 @@
-package srm.department;
+package br.com.srm.department;
 
 import br.com.srm.exception.BusinessServiceException;
 import br.com.srm.model.DepartmentEntity;

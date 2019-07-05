@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient("estoqueservice")
 public interface EstoqueClient {
 
-    @RequestMapping(value = "/v1/departments/{departmentId}/products/{isbn}", method = RequestMethod.GET)
+    @RequestMapping(value = "/v1/departments/{departmentId}/products/{isbn}",
+            method = RequestMethod.GET)
     Product findByIsbn(@PathVariable("departmentId") Long departmentId,
                        @PathVariable("isbn") String isbn);
 
-    @RequestMapping(value = "/v1/departments/{departmentId}/products/{isbn}/subtractAmount", method = RequestMethod.POST)
+    @RequestMapping(value = "/v1/departments/{departmentId}/products/{isbn}/subtractAmount",
+            method = RequestMethod.POST)
     void subtractAmount(@PathVariable("departmentId") Long departmentId,
                         @PathVariable("isbn") String isbn,
                         @RequestParam("amount") Integer amount);

@@ -1,4 +1,4 @@
-package srm.product;
+package br.com.srm.product;
 
 import br.com.srm.JsonUtil;
 import br.com.srm.controller.ProductController;
